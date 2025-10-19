@@ -1,0 +1,21 @@
+{
+  "name": "youtube-live-chat-scraper",
+  "version": "1.0.1",
+  "description": "Captura mensagens do chat ao vivo do YouTube e envia via WebSocket.",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node src/test-improved.js",
+    "test-headless": "node src/test-headless.js",
+    "test-simple": "node src/test.js",
+    "debug": "node src/debug.js",
+    "server": "node server-votacao.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "puppeteer": "^22.7.1",
+    "ws": "^8.16.0"
+  }
+}

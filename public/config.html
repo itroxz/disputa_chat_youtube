@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Configuração - Votação</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .alert-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border-left: 4px solid #17a2b8;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .opcao-box {
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      background: #f8f9fa;
+    }
+
+    .opcao-box h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #555;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group input[type="color"] {
+      height: 50px;
+      cursor: pointer;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .links-box {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .links-box h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    .link-item {
+      background: white;
+      padding: 12px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .link-item a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .link-item a:hover {
+      text-decoration: underline;
+    }
+
+    .badge {
+      background: #667eea;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .preview {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .preview-item {
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .preview-item .nome {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .preview-item .palavra {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>⚙️ Painel de Configuração</h1>
+      <p>Configure as opções de votação em tempo real</p>
+    </div>
+
+    <div id="successMessage" class="alert alert-success" style="display: none;">
+      ✓ Configuração salva com sucesso!
+    </div>
+
+    <div class="card">
+      <h2>📝 Configurar Votação</h2>
+      
+      <form id="configForm">
+        <div class="form-group">
+          <label>📢 Título da Votação:</label>
+          <input type="text" id="titulo" placeholder="Ex: MELHOR TIME DO BRASIL" maxlength="50" required>
+          <small style="color: #666;">Aparecerá no topo do overlay (máx 50 caracteres)</small>
+        </div>
+
+        <div class="grid">
+          <div class="opcao-box">
+            <h3>🔵 Opção 1</h3>
+            <div class="form-group">
+              <label>Palavra-chave:</label>
+              <input type="text" id="palavra1" placeholder="Ex: flamengo" required>
+              <small style="color: #666;">Será detectada automaticamente no chat</small>
+            </div>
+            <div class="form-group">
+              <label>Nome para exibir:</label>
+              <input type="text" id="nome1" placeholder="Ex: Flamengo" required>
+            </div>
+            <div class="form-group">
+              <label>Cor:</label>
+              <input type="color" id="cor1" value="#3498db">
+            </div>
+          </div>
+
+          <div class="opcao-box">
+            <h3>🔴 Opção 2</h3>
+            <div class="form-group">
+              <label>Palavra-chave:</label>
+              <input type="text" id="palavra2" placeholder="Ex: vasco" required>
+              <small style="color: #666;">Será detectada automaticamente no chat</small>
+            </div>
+            <div class="form-group">
+              <label>Nome para exibir:</label>
+              <input type="text" id="nome2" placeholder="Ex: Vasco" required>
+            </div>
+            <div class="form-group">
+              <label>Cor:</label>
+              <input type="color" id="cor2" value="#e74c3c">
+            </div>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 20px; color: #2c3e50;">📊 Preview:</h3>
+        <div style="text-align: center; margin-bottom: 15px;">
+          <div id="previewTitulo" style="font-size: 1.5rem; font-weight: bold; color: #2c3e50; text-transform: uppercase; letter-spacing: 2px;">
+            ⚡ VOTAÇÃO ⚡
+          </div>
+        </div>
+        <div class="preview">
+          <div class="preview-item" id="preview1" style="background: #3498db;">
+            <div class="nome" id="previewNome1">Opção 1</div>
+            <div class="palavra" id="previewPalavra1">palavra-chave: opção1</div>
+          </div>
+          <div class="preview-item" id="preview2" style="background: #e74c3c;">
+            <div class="nome" id="previewNome2">Opção 2</div>
+            <div class="palavra" id="previewPalavra2">palavra-chave: opção2</div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="btn-primary">💾 Salvar Configuração</button>
+          <button type="button" class="btn-danger" onclick="resetarVotos()">🔄 Resetar Votos</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>🔗 Links Importantes</h2>
+      <div class="links-box">
+        <h3>Para adicionar no OBS:</h3>
+        <div class="link-item">
+          <a href="overlay.html" target="_blank">📺 Overlay de Votação</a>
+          <span class="badge">Adicionar como Browser Source</span>
+        </div>
+        <div style="margin-top: 10px; padding: 10px; background: #fff3cd; border-radius: 5px; font-size: 0.9rem;">
+          <strong>📌 Como adicionar no OBS:</strong><br>
+          1. Clique com botão direito → Adicionar → Browser Source<br>
+          2. Cole a URL: <code>http://localhost:3000/overlay.html</code><br>
+          3. Largura: 600px / Altura: 400px<br>
+          4. ✓ Pronto! O overlay aparecerá na transmissão
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Preview em tempo real
+    ['titulo', 'palavra1', 'nome1', 'cor1', 'palavra2', 'nome2', 'cor2'].forEach(id => {
+      document.getElementById(id).addEventListener('input', atualizarPreview);
+    });
+
+    function atualizarPreview() {
+      const titulo = document.getElementById('titulo').value || '⚡ VOTAÇÃO ⚡';
+      const palavra1 = document.getElementById('palavra1').value || 'palavra1';
+      const nome1 = document.getElementById('nome1').value || 'Opção 1';
+      const cor1 = document.getElementById('cor1').value;
+      
+      const palavra2 = document.getElementById('palavra2').value || 'palavra2';
+      const nome2 = document.getElementById('nome2').value || 'Opção 2';
+      const cor2 = document.getElementById('cor2').value;
+      
+      document.getElementById('previewTitulo').textContent = titulo;
+      document.getElementById('previewNome1').textContent = nome1;
+      document.getElementById('previewPalavra1').textContent = `palavra-chave: ${palavra1}`;
+      document.getElementById('preview1').style.background = cor1;
+      
+      document.getElementById('previewNome2').textContent = nome2;
+      document.getElementById('previewPalavra2').textContent = `palavra-chave: ${palavra2}`;
+      document.getElementById('preview2').style.background = cor2;
+    }
+
+    // Carregar configuração atual
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(config => {
+        document.getElementById('titulo').value = config.titulo || '⚡ VOTAÇÃO ⚡';
+        document.getElementById('palavra1').value = config.opcao1.palavra;
+        document.getElementById('nome1').value = config.opcao1.nome;
+        document.getElementById('cor1').value = config.opcao1.cor;
+        
+        document.getElementById('palavra2').value = config.opcao2.palavra;
+        document.getElementById('nome2').value = config.opcao2.nome;
+        document.getElementById('cor2').value = config.opcao2.cor;
+        
+        atualizarPreview();
+      });
+
+    // Salvar configuração
+    document.getElementById('configForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const novaConfig = {
+        titulo: document.getElementById('titulo').value.trim(),
+        opcao1: {
+          palavra: document.getElementById('palavra1').value.trim(),
+          nome: document.getElementById('nome1').value.trim(),
+          cor: document.getElementById('cor1').value
+        },
+        opcao2: {
+          palavra: document.getElementById('palavra2').value.trim(),
+          nome: document.getElementById('nome2').value.trim(),
+          cor: document.getElementById('cor2').value
+        }
+      };
+      
+      try {
+        const res = await fetch('/api/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(novaConfig)
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+          const msg = document.getElementById('successMessage');
+          msg.style.display = 'block';
+          setTimeout(() => msg.style.display = 'none', 3000);
+        }
+      } catch (err) {
+        alert('✗ Erro ao salvar: ' + err.message);
+      }
+    });
+
+    async function resetarVotos() {
+      if (!confirm('Deseja realmente resetar todos os votos?')) return;
+      
+      try {
+        await fetch('/api/votos/reset', { method: 'POST' });
+        alert('✓ Votos resetados com sucesso!');
+      } catch (err) {
+        alert('✗ Erro ao resetar: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
