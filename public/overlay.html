@@ -210,11 +210,13 @@
       ws = new WebSocket('ws://localhost:3001');
       
       ws.onopen = () => {
-        console.log('✓ Conectado ao servidor');
+        console.log('✓ Conectado ao servidor WebSocket');
+        console.log('⏳ Aguardando configuração inicial...');
       };
       
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log('📨 Mensagem recebida:', data.type, data);
         
         switch(data.type) {
           case 'config':
@@ -238,10 +240,13 @@
 
     function receberConfig(novaConfig) {
       config = novaConfig;
+      console.log('📝 Configuração recebida:', config);
       
       document.getElementById('titulo').textContent = config.titulo || '⚡ VOTAÇÃO ⚡';
       document.getElementById('nome1').textContent = config.opcao1.nome;
       document.getElementById('nome2').textContent = config.opcao2.nome;
+      
+      console.log('✓ Nomes atualizados:', config.opcao1.nome, config.opcao2.nome);
       
       document.getElementById('barra1').style.background = config.opcao1.cor;
       document.getElementById('barra2').style.background = config.opcao2.cor;
